@@ -1,0 +1,8 @@
+.container-login {
+    height: 100vh;
+}
+
+.card {
+    width: 50%;
+    max-width: 350px;
+}
