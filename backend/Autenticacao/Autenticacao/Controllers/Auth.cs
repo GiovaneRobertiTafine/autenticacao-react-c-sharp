@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Bogus;
 
 namespace Autenticacao.Controllers
 {
@@ -113,6 +114,31 @@ namespace Autenticacao.Controllers
         public ActionResult<string> Authenticated()
         {
             return Ok(new { message = $"Autenticado {User.Identity.Name}" });
+        }
+
+        [HttpPost]
+        [Route("Generateproducts")]
+        [AllowAnonymous]
+        public ActionResult GenerateProducts()
+        {
+            try
+            {
+                var userGenerate = new Faker<Product>()
+                    .RuleFor(p => p.Deparment, f => f.PickRandom<Deparment>())
+                    .RuleFor(p => p.Name, (f) => f.Commerce.ProductName())
+                    .RuleFor(p => p.Price, (f) => Convert.ToDouble(f.Commerce.Price()))
+                    .RuleFor(u => u.id_product, f => Guid.NewGuid().ToString());
+
+                Product pro = userGenerate.Generate();
+
+                this.db.Product.Add(pro);
+                this.db.SaveChanges();
+                return Ok(new { message = "Produto gerado" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError);
+            }
         }
     }
 }
