@@ -4,12 +4,8 @@ import api from '../../services/api';
 import './styles.css';
 import { Toast } from 'bootstrap';
 import { useState } from 'react';
-import { setTimeout } from 'timers';
-
-interface User {
-    Nome: string;
-    Senha: string;
-}
+import { User } from '../../interfaces/User';
+import { loginService, setToken } from '../../services/auth.service';
 
 export default function Logon(props: User) {
     const { register, handleSubmit, formState: { errors } } = useForm<User>();
@@ -19,21 +15,25 @@ export default function Logon(props: User) {
 
     const onSubmit = handleSubmit(async (data) => {
         setLoad(true);
+        loginService(data)
+            .then((res) => {
+                console.log(res);
+                if (res?.status !== 200) {
+                    setErrorMessage(res.response?.data.message ?? 'Erro interno, tente novamente');
+                    var toastElList = [].slice.call(document.querySelectorAll('.toast'));
+                    var toastList = toastElList.map(function (toastEl) {
 
-        try {
-            const response = await api.post('login', data);
-            // history.push('/product');
-            console.log(response);
-        } catch (err) {
-            setErrorMessage(err.response.data.message);
-            var toastElList = [].slice.call(document.querySelectorAll('.toast'));
-            var toastList = toastElList.map(function (toastEl) {
+                        return new Toast(toastEl);
+                    });
+                    toastList.forEach(toast => toast.show());
 
-                return new Toast(toastEl);
+                } else {
+                    setToken(res.data);
+                    history.push('/manager');
+                    console.log(res);
+                }
+                setLoad(false);
             });
-            toastList.forEach(toast => toast.show());
-        }
-        setLoad(false);
     });
 
 
@@ -47,17 +47,17 @@ export default function Logon(props: User) {
                     <form onSubmit={onSubmit}>
                         <div className="mb-3">
                             <label className="form-label" htmlFor="login">Usuário</label>
-                            <input {...register("Nome", { required: true })} type="text" className="form-control" id="login" aria-describedby="emailHelp" />
+                            <input {...register("nome", { required: true })} type="text" className="form-control" id="login" aria-describedby="emailHelp" />
                             <div id="emailHelp" className="form-text">Ex: Nome</div>
                             {
-                                errors.Nome && <small className="text-danger">Nome é obrigatório</small>
+                                errors.nome && <small className="text-danger">Nome é obrigatório</small>
                             }
                         </div>
                         <div className="mb-3">
                             <label className="form-label" htmlFor="password">Senha</label>
-                            <input {...register("Senha", { required: true })} type="password" className="form-control" id="password" />
+                            <input {...register("senha", { required: true })} type="password" className="form-control" id="password" />
                             {
-                                errors.Senha && <small className="text-danger">Senha é obrigatório</small>
+                                errors.senha && <small className="text-danger">Senha é obrigatório</small>
                             }
                         </div>
                         <button type="submit" className="btn btn-primary" disabled={load}>Entrar

@@ -124,9 +124,9 @@ namespace Autenticacao.Controllers
             try
             {
                 var userGenerate = new Faker<Product>()
-                    .RuleFor(p => p.Deparment, f => f.PickRandom<Deparment>())
-                    .RuleFor(p => p.Name, (f) => f.Commerce.ProductName())
-                    .RuleFor(p => p.Price, (f) => Convert.ToDouble(f.Commerce.Price()))
+                    .RuleFor(p => p.Departamento, f => f.PickRandom<Deparment>())
+                    .RuleFor(p => p.Nome, (f) => f.Commerce.ProductName())
+                    .RuleFor(p => p.Preco, (f) => Convert.ToDouble(f.Commerce.Price()))
                     .RuleFor(u => u.id_product, f => Guid.NewGuid().ToString());
 
                 Product pro = userGenerate.Generate();
@@ -134,6 +134,25 @@ namespace Autenticacao.Controllers
                 this.db.Product.Add(pro);
                 this.db.SaveChanges();
                 return Ok(new { message = "Produto gerado" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError);
+            }
+        }
+
+        [HttpGet]
+        [Route("Products")]
+        [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
+        [ProducesResponseType(500)]
+        [Authorize(Roles = "Administrator,Employee")]
+        public ActionResult GetProducts()
+        {
+            try
+            {
+                IReadOnlyList<Product> products = this.db.Product.ToList();
+
+                return Ok(products);
             }
             catch (Exception ex)
             {

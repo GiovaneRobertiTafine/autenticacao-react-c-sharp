@@ -13,10 +13,10 @@ namespace Autenticacao.Models
         [Key]
         public string id_product { get; set; }
         [Required]
-        public string Name { get; set; }
+        public string Nome { get; set; }
         [Required]
-        public double Price { get; set; }
+        public double Preco { get; set; }
         [Required]
-        public Deparment Deparment { get; set; }
+        public Deparment Departamento { get; set; }
     }
 }

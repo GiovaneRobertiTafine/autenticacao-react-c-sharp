@@ -21,6 +21,15 @@ namespace Autenticacao.Mapping
                     map.MapFrom(src => src.Role))
                 .ReverseMap();
 
+            CreateMap<Product, ProductDto>()
+                .ForMember(dest => dest.Nome, map =>
+                    map.MapFrom(src => src.Nome))
+                .ForMember(dest => dest.Preco, map =>
+                    map.MapFrom(src => src.Preco))
+                .ForMember(dest => dest.Departamento, map =>
+                    map.MapFrom(src => src.Departamento))
+                .ReverseMap();
+
         }
 
     }
