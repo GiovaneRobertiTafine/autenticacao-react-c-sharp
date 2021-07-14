@@ -12,6 +12,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Bogus;
+using Microsoft.AspNetCore.Authentication;
 
 namespace Autenticacao.Controllers
 {
@@ -111,9 +112,20 @@ namespace Autenticacao.Controllers
         [HttpGet]
         [Route("Authenticated")]
         [Authorize]
-        public ActionResult<string> Authenticated()
+        public async Task<ActionResult<string>> Authenticated()
         {
-            return Ok(new { message = $"Autenticado {User.Identity.Name}" });
+            try
+            {
+                User user = this.db.Users.FirstOrDefault(u => (u.Name == User.Identity.Name));
+                UserDto u = _mapper.Map<UserDto>(user);
+                u.Token = await HttpContext.GetTokenAsync("access_token");
+                u.Senha = null;
+                return Ok(u);
+            }
+            catch (Exception e)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError);
+            }
         }
 
         [HttpPost]

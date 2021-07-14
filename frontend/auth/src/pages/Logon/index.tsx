@@ -1,13 +1,12 @@
 import { useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
-import api from '../../services/api';
 import './styles.css';
 import { Toast } from 'bootstrap';
 import { useState } from 'react';
 import { User } from '../../interfaces/User';
 import { loginService, setToken } from '../../services/auth.service';
 
-export default function Logon(props: User) {
+export default function Logon() {
     const { register, handleSubmit, formState: { errors } } = useForm<User>();
     const history = useHistory();
     const [errorMessage, setErrorMessage] = useState('');
@@ -17,7 +16,6 @@ export default function Logon(props: User) {
         setLoad(true);
         loginService(data)
             .then((res) => {
-                console.log(res);
                 if (res?.status !== 200) {
                     setErrorMessage(res.response?.data.message ?? 'Erro interno, tente novamente');
                     var toastElList = [].slice.call(document.querySelectorAll('.toast'));
@@ -30,7 +28,6 @@ export default function Logon(props: User) {
                 } else {
                     setToken(res.data);
                     history.push('/manager');
-                    console.log(res);
                 }
                 setLoad(false);
             });

@@ -1,24 +1,27 @@
 import { Component } from 'react';
-import { BrowserRouter, Route, RouterProps, Switch } from 'react-router-dom';
+import { BrowserRouter, Redirect, Route, RouterProps, Switch } from 'react-router-dom';
 
 import Logon from './pages/Logon';
 import Manager from './pages/Manager';
+import { isAuthenticated } from './services/auth.service';
 
-const PrivateRoute = ({ component: Component, ...rest }) => (
-    <Route
-        {...rest}
-        render={props =>
-            <Component {...props} />
-        }
-    />
-);
+// const PrivateRoute = ({ component: Component, ...rest }) => (
+//     <Route
+//         {...rest}
+//         render={props =>
+//             isAuthenticated() ?
+//                 <Component {...props} /> :
+//                 <Redirect to={{ pathname: '/', state: { from: props.location } }} />
+//         }
+//     />
+// );
 
 export default function Routes() {
     return (
         <BrowserRouter>
             <Switch>
+                <Route path="/manager" component={Manager} />
                 <Route path="/" exact component={Logon} />
-                <PrivateRoute path="/manager" component={Manager} />
             </Switch>
         </BrowserRouter>
     );

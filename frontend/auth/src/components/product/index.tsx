@@ -6,13 +6,18 @@ import { Departamento } from "../../enums/departamento.enum";
 
 export default function Products() {
     const [products, setProducts] = useState<Product[]>(null);
-
     useEffect(() => {
-        console.log(getToken());
+        let componentMounted = true;
         getProducts(getToken())
             .then((res) => {
-                setProducts(res.data);
+                if (componentMounted) {
+                    setProducts(res.data);
+
+                }
             });
+        return () => {
+            componentMounted = true;
+        };
 
     }, []);
 
@@ -29,9 +34,7 @@ export default function Products() {
                                     {
                                         Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(product.preco)
                                     } |
-                                    {
-                                        Departamento[product.departamento]
-                                    }
+                                    {Departamento[product.departamento]}
 
                                 </li>
                             );
