@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { BrowserRouter, Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
-import People from '../../components/people';
+import Peoples from '../../components/people';
 import Products from '../../components/product';
 import { isAuthenticated } from '../../services/auth.service';
 
@@ -9,12 +9,16 @@ export default function RoutesManager() {
     const [authenticated, setAuthenticated] = useState<boolean>(null);
 
     useEffect(() => {
-        console.log("use");
+        let componentMounted = true;
         isAuthenticated()
             .then((res) => {
-                setAuthenticated(res);
+                if (componentMounted) {
+                    setAuthenticated(res);
+                }
             });
-
+        return () => {
+            componentMounted = true;
+        };
     });
 
     const PrivateRoute = ({ component: Component, authenticated: authenticated, ...rest }) => {
@@ -38,7 +42,7 @@ export default function RoutesManager() {
     return (
         <Switch>
             <PrivateRoute path={`${match.path}/products`} authenticated={authenticated} component={Products} />
-            <PrivateRoute path={`${match.path}/peoples`} authenticated={authenticated} component={People} />
+            <PrivateRoute path={`${match.path}/peoples`} authenticated={authenticated} component={Peoples} />
             <Redirect path={`${match.path}`} exact to={`${match.path}/products`} />
         </Switch>
 

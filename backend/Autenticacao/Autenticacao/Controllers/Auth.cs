@@ -153,6 +153,32 @@ namespace Autenticacao.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("Generatepeoples")]
+        [AllowAnonymous]
+        public ActionResult GeneratePeoples()
+        {
+            try
+            {
+                var peopleGenerate = new Faker<People>()
+                    .RuleFor(p => p.Empresa, f => f.Company.CompanyName())
+                    .RuleFor(p => p.Nome, (f) => f.Name.FullName())
+                    .RuleFor(p => p.Email, (f, u) => f.Internet.Email(u.Nome))
+                    .RuleFor(p => p.Pais, (f, u) => f.Address.Country())
+                    .RuleFor(u => u.id_people, f => Guid.NewGuid().ToString());
+
+                People peo = peopleGenerate.Generate();
+
+                this.db.People.Add(peo);
+                this.db.SaveChanges();
+                return Ok(new { message = "People gerado" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError);
+            }
+        }
+
         [HttpGet]
         [Route("Products")]
         [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
@@ -165,6 +191,25 @@ namespace Autenticacao.Controllers
                 IReadOnlyList<Product> products = this.db.Product.ToList();
 
                 return Ok(products);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError);
+            }
+        }
+
+        [HttpGet]
+        [Route("Peoples")]
+        [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
+        [ProducesResponseType(500)]
+        [Authorize(Roles = "Administrator,Employee")]
+        public ActionResult GetPeoples()
+        {
+            try
+            {
+                IReadOnlyList<People> peoples = this.db.People.ToList();
+
+                return Ok(peoples);
             }
             catch (Exception ex)
             {

@@ -30,7 +30,6 @@ export const loginService = async (data: User) => {
 };
 
 export const setToken = (u: User) => {
-    console.log(u);
     localStorage.setItem('token', u.token);
 };
 
@@ -42,10 +41,8 @@ export const checkTokenValidation = async () => {
     try {
         const response = await api.get('authenticated', { headers: { Authorization: `Bearer ${getToken()}` } });
         user = response.data;
-        console.log(response.status);
         return true;
     } catch (err) {
-        console.log(err);
         return false;
     }
 };

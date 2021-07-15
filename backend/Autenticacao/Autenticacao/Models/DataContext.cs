@@ -26,5 +26,6 @@ namespace Autenticacao.Models
 
         public DbSet<User> Users { get; set; }
         public DbSet<Product> Product { get; set; }
+        public DbSet<People> People { get; set; }
     }
 }
