@@ -1,41 +1,12 @@
 import { useRouteMatch, Link, NavLink } from "react-router-dom";
+import { Perfil } from "../../enums/perfil.enum";
+import { user } from "../../services/auth.service";
 import RoutesManager from "./routesManager";
 
 export default function Manager() {
     let match = useRouteMatch();
     return (
         <>
-            {/* <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-                <div className="container-fluid">
-                    <a className="navbar-brand">Auth</a>
-                    <div className="collapse navbar-collapse" id="navbarNav">
-                        <ul className="navbar-nav">
-                            <li className="nav-item">
-                                <NavLink activeClassName="active-link-nav" to={`${match.url}/products`} >
-                                    <button className="btn btn-outline-success me-2">
-                                        Products
-                                    </button>
-                                </NavLink >
-                            </li>
-                            <li className="nav-item">
-                                <NavLink activeClassName="active-link-nav" to={`${match.url}/peoples`} >
-                                    <button className="btn btn-outline-success me-2">
-                                        Peoples
-                                    </button>
-                                </NavLink >
-
-                            </li>
-                            <li className="nav-item dropdown">
-                                <a className="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Dropdown</a>
-                                <ul className="dropdown-menu">
-                                    <li><a className="dropdown-item" href="#">Action</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </nav> */}
-
             <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
                 <div className="container-fluid">
                     <a className="navbar-brand">Auth</a>
@@ -51,14 +22,18 @@ export default function Manager() {
                                     </button>
                                 </NavLink >
                             </li>
-                            <li className="nav-item">
-                                <NavLink activeClassName="active-link-nav" to={`${match.url}/peoples`} >
-                                    <button className="btn btn-outline-success me-2">
-                                        Peoples
-                                    </button>
-                                </NavLink >
+                            {
+                                (user && (user.perfil === Perfil.Administrator)) ?
+                                    <li className="nav-item">
+                                        <NavLink activeClassName="active-link-nav" to={`${match.url}/peoples`} >
+                                            <button className="btn btn-outline-success me-2">
+                                                Peoples
+                                            </button>
+                                        </NavLink >
 
-                            </li>
+                                    </li>
+                                    : null
+                            }
                             <li className="nav-item dropdown">
                                 <a className="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Link
