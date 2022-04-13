@@ -11,5 +11,5 @@ Utilizar biblioteca para criptografar a senha e JWT para os dados utilizando com
 Aprendizado referente ao processo de criação de uma página de login
 
 :bicyclist: **Correr:**</br>
-Contendo no repositório os dois projetos, back end em C# e front end em React, acesse o projeto do back end e inicie depuração ou Ctrl + F5,
+Contendo no repositório os dois projetos, back end em C# e front end em React, acesse o projeto do back end e inicie depuração ou `Ctrl + F5`,
 acesse o projeto do front end e rode `npm run start`
